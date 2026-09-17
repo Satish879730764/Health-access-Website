@@ -88,7 +88,7 @@ const tabs: { id: ScreenId; icon: typeof Mic; label: Record<Lang, string>; sub: 
 function Index() {
   const [lang, setLang] = useState<Lang>("en");
   const [screen, setScreen] = useState<ScreenId>("home");
-  const [facility, setFacility] = useState<Facility>(facilities[0]);
+  const [facility, setFacility] = useState<Facility>(facilities[0]!);
 
   const go = (id: ScreenId) => setScreen(id);
 
