@@ -10,33 +10,111 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as EmergencyRouteImport } from './routes/emergency'
+import { Route as FacilitiesRouteImport } from './routes/facilities'
+import { Route as HealthInfoRouteImport } from './routes/health-info'
+import { Route as VoiceRouteImport } from './routes/voice'
+import { Route as FacilitiesIndexRouteImport } from './routes/facilities.index'
+import { Route as FacilitiesFacilityIdRouteImport } from './routes/facilities.$facilityId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmergencyRoute = EmergencyRouteImport.update({
+  id: '/emergency',
+  path: '/emergency',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FacilitiesRoute = FacilitiesRouteImport.update({
+  id: '/facilities',
+  path: '/facilities',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HealthInfoRoute = HealthInfoRouteImport.update({
+  id: '/health-info',
+  path: '/health-info',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VoiceRoute = VoiceRouteImport.update({
+  id: '/voice',
+  path: '/voice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FacilitiesIndexRoute = FacilitiesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => FacilitiesRoute,
+} as any)
+const FacilitiesFacilityIdRoute = FacilitiesFacilityIdRouteImport.update({
+  id: '/$facilityId',
+  path: '/$facilityId',
+  getParentRoute: () => FacilitiesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/emergency': typeof EmergencyRoute
+  '/facilities': typeof FacilitiesRouteWithChildren
+  '/health-info': typeof HealthInfoRoute
+  '/voice': typeof VoiceRoute
+  '/facilities/$facilityId': typeof FacilitiesFacilityIdRoute
+  '/facilities/': typeof FacilitiesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/emergency': typeof EmergencyRoute
+  '/health-info': typeof HealthInfoRoute
+  '/voice': typeof VoiceRoute
+  '/facilities/$facilityId': typeof FacilitiesFacilityIdRoute
+  '/facilities': typeof FacilitiesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/emergency': typeof EmergencyRoute
+  '/facilities': typeof FacilitiesRouteWithChildren
+  '/health-info': typeof HealthInfoRoute
+  '/voice': typeof VoiceRoute
+  '/facilities/$facilityId': typeof FacilitiesFacilityIdRoute
+  '/facilities/': typeof FacilitiesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/emergency'
+    | '/facilities'
+    | '/health-info'
+    | '/voice'
+    | '/facilities/$facilityId'
+    | '/facilities/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/emergency'
+    | '/health-info'
+    | '/voice'
+    | '/facilities/$facilityId'
+    | '/facilities'
+  id:
+    | '__root__'
+    | '/'
+    | '/emergency'
+    | '/facilities'
+    | '/health-info'
+    | '/voice'
+    | '/facilities/$facilityId'
+    | '/facilities/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EmergencyRoute: typeof EmergencyRoute
+  FacilitiesRoute: typeof FacilitiesRouteWithChildren
+  HealthInfoRoute: typeof HealthInfoRoute
+  VoiceRoute: typeof VoiceRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +126,71 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/emergency': {
+      id: '/emergency'
+      path: '/emergency'
+      fullPath: '/emergency'
+      preLoaderRoute: typeof EmergencyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/facilities': {
+      id: '/facilities'
+      path: '/facilities'
+      fullPath: '/facilities'
+      preLoaderRoute: typeof FacilitiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/health-info': {
+      id: '/health-info'
+      path: '/health-info'
+      fullPath: '/health-info'
+      preLoaderRoute: typeof HealthInfoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/voice': {
+      id: '/voice'
+      path: '/voice'
+      fullPath: '/voice'
+      preLoaderRoute: typeof VoiceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/facilities/': {
+      id: '/facilities/'
+      path: '/'
+      fullPath: '/facilities/'
+      preLoaderRoute: typeof FacilitiesIndexRouteImport
+      parentRoute: typeof FacilitiesRoute
+    }
+    '/facilities/$facilityId': {
+      id: '/facilities/$facilityId'
+      path: '/$facilityId'
+      fullPath: '/facilities/$facilityId'
+      preLoaderRoute: typeof FacilitiesFacilityIdRouteImport
+      parentRoute: typeof FacilitiesRoute
+    }
   }
 }
 
+interface FacilitiesRouteChildren {
+  FacilitiesFacilityIdRoute: typeof FacilitiesFacilityIdRoute
+  FacilitiesIndexRoute: typeof FacilitiesIndexRoute
+}
+
+const FacilitiesRouteChildren: FacilitiesRouteChildren = {
+  FacilitiesFacilityIdRoute: FacilitiesFacilityIdRoute,
+  FacilitiesIndexRoute: FacilitiesIndexRoute,
+}
+
+const FacilitiesRouteWithChildren = FacilitiesRoute._addFileChildren(
+  FacilitiesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EmergencyRoute: EmergencyRoute,
+  FacilitiesRoute: FacilitiesRouteWithChildren,
+  HealthInfoRoute: HealthInfoRoute,
+  VoiceRoute: VoiceRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
